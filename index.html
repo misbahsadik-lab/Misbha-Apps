@@ -1,0 +1,993 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>MISBAH PRODUCT MANAGER</title>
+  <style>
+    :root {
+      --navy: #0a1f44;
+      --navy-dark: #06132b;
+      --gold: #d4af37;
+      --gold-soft: #f7ecc6;
+      --bg: #f5f7fb;
+      --card: #ffffff;
+      --text: #0a1f44;
+      --muted: #556582;
+      --border: #dfe5f0;
+      --green: #15803d;
+      --red: #b91c1c;
+    }
+    body.dark {
+      --bg: #071122;
+      --card: #0e1d38;
+      --text: #f8fafc;
+      --muted: #cbd5e1;
+      --border: #1e355e;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+    }
+    header {
+      background: var(--navy);
+      color: #fff;
+      padding: 14px 16px;
+      border-bottom: 2px solid var(--gold);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      position: sticky;
+      top: 0;
+      z-index: 20;
+    }
+    header h1 {
+      margin: 0;
+      font-size: 17px;
+      color: var(--gold);
+      letter-spacing: 0.4px;
+    }
+    header small {
+      display: block;
+      font-size: 12px;
+      color: #e2e8f0;
+    }
+    .btn {
+      border: none;
+      border-radius: 10px;
+      padding: 10px 14px;
+      font-weight: 600;
+      cursor: pointer;
+      font-size: 14px;
+    }
+    .btn-gold { background: var(--gold); color: var(--navy-dark); }
+    .btn-navy { background: var(--navy); color: #fff; border: 1px solid var(--gold); }
+    .btn-green { background: var(--green); color: #fff; }
+    .btn-red { background: var(--red); color: #fff; }
+    .btn-ghost { background: transparent; color: var(--text); border: 1px solid var(--border); }
+
+    nav {
+      display: flex;
+      gap: 6px;
+      overflow-x: auto;
+      padding: 10px 12px;
+      background: var(--card);
+      border-bottom: 1px solid var(--border);
+      position: sticky;
+      top: 62px;
+      z-index: 15;
+    }
+    nav button {
+      background: transparent;
+      color: var(--muted);
+      border: 1px solid transparent;
+      border-radius: 10px;
+      padding: 8px 12px;
+      font-weight: 600;
+      white-space: nowrap;
+      cursor: pointer;
+      font-size: 13px;
+    }
+    nav button.active {
+      background: var(--navy);
+      color: var(--gold);
+      border-color: var(--gold);
+    }
+    main {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 16px;
+    }
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+      gap: 12px;
+      margin-bottom: 16px;
+    }
+    .card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 14px;
+      margin-bottom: 14px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.04);
+    }
+    .stat-title { font-size: 13px; color: var(--muted); margin-bottom: 6px; }
+    .stat-val { font-size: 20px; font-weight: 700; }
+    .highlight-card {
+      background: linear-gradient(135deg, var(--navy), var(--navy-dark));
+      color: #fff;
+      border: 1.5px solid var(--gold);
+    }
+    .highlight-card .stat-title { color: var(--gold); }
+
+    .form-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 10px;
+      margin-bottom: 12px;
+    }
+    input, select, textarea {
+      width: 100%;
+      padding: 10px 12px;
+      border-radius: 10px;
+      border: 1px solid var(--border);
+      background: var(--bg);
+      color: var(--text);
+      font-size: 14px;
+    }
+    label { display: block; font-size: 12px; color: var(--muted); margin-bottom: 4px; font-weight: 600; }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 13px;
+    }
+    th, td {
+      padding: 10px 8px;
+      border-bottom: 1px solid var(--border);
+      text-align: left;
+    }
+    th { color: var(--muted); font-weight: 700; }
+    .table-wrap { overflow-x: auto; }
+
+    .badge {
+      display: inline-block;
+      padding: 4px 8px;
+      border-radius: 8px;
+      font-size: 12px;
+      font-weight: 600;
+      background: var(--gold-soft);
+      color: var(--navy-dark);
+    }
+    .alert-box {
+      padding: 10px 14px;
+      border-radius: 10px;
+      margin-bottom: 12px;
+      font-weight: 600;
+      font-size: 13px;
+    }
+    .alert-err { background: #fee2e2; color: #991b1b; }
+    .alert-ok { background: #dcfce7; color: #166534; }
+    .row-actions { display: flex; gap: 6px; flex-wrap: wrap; }
+    .section-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-bottom: 12px;
+    }
+    .section-head h2 { margin: 0; font-size: 18px; }
+  </style>
+</head>
+<body>
+  <header>
+    <div>
+      <h1>MISBAH PRODUCT MANAGER</h1>
+      <small>বিজনেস ও ইনভেন্টরি ম্যানেজমেন্ট সফটওয়্যার</small>
+    </div>
+    <button class="btn btn-gold" onclick="toggleTheme()">থিম বদলান</button>
+  </header>
+
+  <nav id="navBar">
+    <button class="active" data-tab="dashboard" onclick="switchTab('dashboard')">ড্যাশবোর্ড</button>
+    <button data-tab="products" onclick="switchTab('products')">পণ্য</button>
+    <button data-tab="lots" onclick="switchTab('lots')">Lot</button>
+    <button data-tab="parties" onclick="switchTab('parties')">পার্টি কন্টাক্ট</button>
+    <button data-tab="sales" onclick="switchTab('sales')">বিক্রয়</button>
+    <button data-tab="payments" onclick="switchTab('payments')">পেমেন্ট ও খাতা</button>
+    <button data-tab="reports" onclick="switchTab('reports')">রিপোর্ট</button>
+    <button data-tab="backup" onclick="switchTab('backup')">ব্যাকআপ/রিস্টোর</button>
+  </nav>
+
+  <main>
+    <div id="msgArea"></div>
+    <div id="appView"></div>
+  </main>
+
+  <script>
+    const STORAGE_KEY = "misbah_product_manager_db_v1";
+    let currentTab = "dashboard";
+    let selectedLedgerPartyId = "";
+
+    const defaultDb = () => ({
+      products: [],
+      lots: [],
+      parties: [],
+      sales: [],
+      payments: []
+    });
+
+    let db = loadDb();
+
+    function loadDb() {
+      try {
+        const raw = localStorage.getItem(STORAGE_KEY);
+        if (!raw) return defaultDb();
+        const parsed = JSON.parse(raw);
+        return {
+          products: parsed.products || [],
+          lots: parsed.lots || [],
+          parties: parsed.parties || [],
+          sales: parsed.sales || [],
+          payments: parsed.payments || []
+        };
+      } catch {
+        return defaultDb();
+      }
+    }
+
+    function saveDb() {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(db));
+    }
+
+    function showMessage(text, isError = false) {
+      const area = document.getElementById("msgArea");
+      area.innerHTML = `<div class="alert-box ${isError ? "alert-err" : "alert-ok"}">${escapeHtml(text)}</div>`;
+      setTimeout(() => { if (area.innerHTML.includes(escapeHtml(text))) area.innerHTML = ""; }, 4500);
+    }
+
+    function escapeHtml(str) {
+      return String(str || "")
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;");
+    }
+
+    function fmtBdt(num) {
+      const n = Number(num || 0);
+      return "৳" + n.toLocaleString("en-US", { maximumFractionDigits: 0 });
+    }
+
+    function fmtDate(ts) {
+      const d = new Date(ts || Date.now());
+      return d.toLocaleDateString("bn-BD", { year: "numeric", month: "short", day: "numeric" });
+    }
+
+    function toggleTheme() {
+      document.body.classList.toggle("dark");
+    }
+
+    function switchTab(tab) {
+      currentTab = tab;
+      document.querySelectorAll("#navBar button").forEach(b => {
+        b.classList.toggle("active", b.dataset.tab === tab);
+      });
+      render();
+    }
+
+    function getPartyTotals(partyId) {
+      const pSales = db.sales.filter(s => s.partyId === partyId);
+      const pPayments = db.payments.filter(p => p.partyId === partyId);
+      const totalSales = pSales.reduce((sum, s) => sum + Number(s.totalAmount || 0), 0);
+      const totalPaid = pPayments.reduce((sum, p) => sum + Number(p.amount || 0), 0);
+      const totalDue = Math.max(0, totalSales - totalPaid);
+      return { totalSales, totalPaid, totalDue, sales: pSales, payments: pPayments };
+    }
+
+    function render() {
+      const view = document.getElementById("appView");
+      if (currentTab === "dashboard") view.innerHTML = renderDashboard();
+      else if (currentTab === "products") view.innerHTML = renderProducts();
+      else if (currentTab === "lots") view.innerHTML = renderLots();
+      else if (currentTab === "parties") view.innerHTML = renderParties();
+      else if (currentTab === "sales") view.innerHTML = renderSales();
+      else if (currentTab === "payments") view.innerHTML = renderPaymentsAndLedger();
+      else if (currentTab === "reports") view.innerHTML = renderReports();
+      else if (currentTab === "backup") view.innerHTML = renderBackup();
+    }
+
+    function renderDashboard() {
+      const totalStock = db.lots.reduce((s, l) => s + Number(l.currentStock || 0), 0);
+      const totalSalesAmount = db.sales.reduce((s, x) => s + Number(x.totalAmount || 0), 0);
+      const totalPurchaseCost = db.sales.reduce((s, x) => s + Number(x.purchaseCost || 0), 0);
+      const totalProfit = db.sales.reduce((s, x) => s + Number(x.profit || 0), 0);
+      const totalDue = db.parties.reduce((s, pt) => s + getPartyTotals(pt.id).totalDue, 0);
+
+      const todayStr = new Date().toDateString();
+      const todaySales = db.sales
+        .filter(s => new Date(s.date).toDateString() === todayStr)
+        .reduce((sum, s) => sum + Number(s.totalAmount || 0), 0);
+
+      const lowStockLots = db.lots.filter(l => {
+        const prod = db.products.find(p => p.id === l.productId);
+        const limit = prod ? Number(prod.lowStock || 5) : 5;
+        return Number(l.currentStock) <= limit;
+      });
+
+      const recentSales = [...db.sales].slice(-5).reverse();
+      const recentPayments = [...db.payments].slice(-5).reverse();
+
+      return `
+        <div class="card highlight-card">
+          <div class="stat-title">আজকের বিক্রয়</div>
+          <div class="stat-val" style="font-size:26px">${fmtBdt(todaySales)}</div>
+        </div>
+
+        <div class="grid">
+          <div class="card"><div class="stat-title">মোট পণ্য</div><div class="stat-val">${db.products.length}</div></div>
+          <div class="card"><div class="stat-title">মোট Lot</div><div class="stat-val">${db.lots.length}</div></div>
+          <div class="card"><div class="stat-title">মোট স্টক</div><div class="stat-val">${totalStock}</div></div>
+          <div class="card"><div class="stat-title">মোট পার্টি</div><div class="stat-val">${db.parties.length}</div></div>
+        </div>
+
+        <div class="grid">
+          <div class="card"><div class="stat-title">মোট বিক্রয়</div><div class="stat-val">${fmtBdt(totalSalesAmount)}</div></div>
+          <div class="card"><div class="stat-title">মোট ক্রয়মূল্য</div><div class="stat-val">${fmtBdt(totalPurchaseCost)}</div></div>
+          <div class="card"><div class="stat-title">মোট লাভ</div><div class="stat-val" style="color:var(--green)">${fmtBdt(totalProfit)}</div></div>
+          <div class="card"><div class="stat-title">মোট বকেয়া</div><div class="stat-val" style="color:var(--red)">${fmtBdt(totalDue)}</div></div>
+        </div>
+
+        <div class="grid">
+          <div class="card">
+            <h3>Low Stock Alert</h3>
+            ${lowStockLots.length === 0
+              ? "<p style='color:var(--muted)'>কোনো Lot-এ স্টক কম নেই।</p>"
+              : lowStockLots.map(l => `<p style="color:var(--red);font-weight:600">• ${escapeHtml(l.productName)} (${escapeHtml(l.lotNumber)}) — স্টক: ${l.currentStock}</p>`).join("")
+            }
+          </div>
+          <div class="card">
+            <h3>সাম্প্রতিক বিক্রয়</h3>
+            ${recentSales.length === 0
+              ? "<p style='color:var(--muted)'>এখনো কোনো বিক্রয় নেই।</p>"
+              : recentSales.map(s => `<p>• ${escapeHtml(s.partyName)}: ${fmtBdt(s.totalAmount)} (${escapeHtml(s.productName)} - ${escapeHtml(s.lotNumber)})</p>`).join("")
+            }
+          </div>
+          <div class="card">
+            <h3>সাম্প্রতিক পেমেন্ট</h3>
+            ${recentPayments.length === 0
+              ? "<p style='color:var(--muted)'>এখনো কোনো পেমেন্ট নেই।</p>"
+              : recentPayments.map(p => `<p>• ${escapeHtml(p.partyName)}: ${fmtBdt(p.amount)} (${escapeHtml(p.method)})</p>`).join("")
+            }
+          </div>
+        </div>
+      `;
+    }
+
+    function renderProducts() {
+      const q = (document.getElementById("prodSearch")?.value || "").toLowerCase();
+      const catFilter = document.getElementById("prodCatFilter")?.value || "সব";
+      const cats = ["সব", ...new Set(db.products.map(p => p.category).filter(Boolean))];
+
+      const filtered = db.products.filter(p => {
+        const matchCat = catFilter === "সব" || p.category === catFilter;
+        const matchQ = !q || p.name.toLowerCase().includes(q) || (p.code || "").toLowerCase().includes(q);
+        return matchCat && matchQ;
+      });
+
+      return `
+        <div class="card">
+          <div class="section-head"><h2>নতুন পণ্য যোগ করুন</h2></div>
+          <div class="form-grid">
+            <div><label>পণ্যের নাম *</label><input id="pName" placeholder="যেমন: Shahi Oud" /></div>
+            <div><label>ক্যাটাগরি</label><input id="pCat" placeholder="যেমন: আতর" value="আতর" /></div>
+            <div><label>পণ্য কোড</label><input id="pCode" placeholder="যেমন: PRD-01" /></div>
+            <div><label>Low Stock সীমা</label><input id="pLow" type="number" value="5" min="0" /></div>
+          </div>
+          <div style="margin-bottom:10px"><label>বিবরণ</label><input id="pDesc" placeholder="পণ্যের সংক্ষিপ্ত বিবরণ" /></div>
+          <button class="btn btn-gold" onclick="addProduct()">পণ্য সেভ করুন</button>
+        </div>
+
+        <div class="card">
+          <div class="section-head">
+            <h2>পণ্যের তালিকা (${filtered.length})</h2>
+            <div class="row-actions">
+              <input id="prodSearch" placeholder="নাম বা কোড দিয়ে খুঁজুন..." value="${escapeHtml(q)}" oninput="render()" style="width:200px" />
+              <select id="prodCatFilter" onchange="render()" style="width:140px">
+                ${cats.map(c => `<option value="${escapeHtml(c)}" ${c === catFilter ? "selected" : ""}>${escapeHtml(c)}</option>`).join("")}
+              </select>
+            </div>
+          </div>
+          <div class="table-wrap">
+            <table>
+              <thead><tr><th>নাম</th><th>ক্যাটাগরি</th><th>কোড</th><th>Low Limit</th><th>অ্যাকশন</th></tr></thead>
+              <tbody>
+                ${filtered.map(p => `
+                  <tr>
+                    <td><strong>${escapeHtml(p.name)}</strong><br><small style="color:var(--muted)">${escapeHtml(p.description || "")}</small></td>
+                    <td><span class="badge">${escapeHtml(p.category)}</span></td>
+                    <td>${escapeHtml(p.code || "-")}</td>
+                    <td>${p.lowStock}</td>
+                    <td><button class="btn btn-red" onclick="deleteProduct('${p.id}')">ডিলিট</button></td>
+                  </tr>
+                `).join("")}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      `;
+    }
+
+    function addProduct() {
+      const name = document.getElementById("pName").value.trim();
+      const category = (document.getElementById("pCat").value.trim() || "আতর");
+      const code = document.getElementById("pCode").value.trim();
+      const lowStock = Number(document.getElementById("pLow").value || 5);
+      const description = document.getElementById("pDesc").value.trim();
+
+      if (!name) return showMessage("পণ্যের নাম অবশ্যই লিখতে হবে।", true);
+      if (lowStock < 0) return showMessage("Low Stock সীমা ০ বা তার বেশি হতে হবে।", true);
+
+      db.products.push({ id: "prd_" + Date.now(), name, category, code, lowStock, description });
+      saveDb();
+      showMessage(`পণ্য '${name}' যোগ করা হয়েছে।`);
+      render();
+    }
+
+    function deleteProduct(id) {
+      const hasLot = db.lots.some(l => l.productId === id);
+      if (hasLot) return showMessage("এই পণ্যের Lot থাকায় ডিলিট করা যাবে না।", true);
+      if (!confirm("আপনি কি এই পণ্যটি ডিলিট করতে চান?")) return;
+      db.products = db.products.filter(p => p.id !== id);
+      saveDb();
+      showMessage("পণ্য ডিলিট করা হয়েছে।");
+      render();
+    }
+
+    function renderLots() {
+      const q = (document.getElementById("lotSearch")?.value || "").toLowerCase();
+      const filtered = db.lots.filter(l =>
+        !q || l.lotNumber.toLowerCase().includes(q) || l.productName.toLowerCase().includes(q)
+      );
+
+      return `
+        <div class="card">
+          <div class="section-head"><h2>নতুন Lot যোগ করুন</h2></div>
+          ${db.products.length === 0
+            ? "<p style='color:var(--red)'>আগে 'পণ্য' ট্যাব থেকে পণ্য যোগ করুন।</p>"
+            : `
+            <div class="form-grid">
+              <div>
+                <label>পণ্য নির্বাচন *</label>
+                <select id="lProduct">
+                  ${db.products.map(p => `<option value="${p.id}">${escapeHtml(p.name)} (${escapeHtml(p.category)})</option>`).join("")}
+                </select>
+              </div>
+              <div><label>Lot নম্বর *</label><input id="lNum" placeholder="যেমন: Lot 1" /></div>
+              <div><label>ক্রয়মূল্য (৳) *</label><input id="lBuy" type="number" min="1" placeholder="যেমন: 500" /></div>
+              <div><label>বিক্রয়মূল্য (৳) *</label><input id="lSell" type="number" min="1" placeholder="যেমন: 800" /></div>
+              <div><label>স্টক পরিমাণ *</label><input id="lStock" type="number" min="1" placeholder="যেমন: 20" /></div>
+              <div><label>নোট</label><input id="lNote" placeholder="ঐচ্ছিক নোট" /></div>
+            </div>
+            <button class="btn btn-gold" onclick="addLot()">Lot সেভ করুন</button>
+          `}
+        </div>
+
+        <div class="card">
+          <div class="section-head">
+            <h2>Lot তালিকা (${filtered.length})</h2>
+            <input id="lotSearch" placeholder="Lot বা পণ্য খুঁজুন..." value="${escapeHtml(q)}" oninput="render()" style="width:200px" />
+          </div>
+          <div class="table-wrap">
+            <table>
+              <thead><tr><th>পণ্য</th><th>Lot নম্বর</th><th>ক্রয়মূল্য</th><th>বিক্রয়মূল্য</th><th>বর্তমান স্টক</th></tr></thead>
+              <tbody>
+                ${filtered.map(l => `
+                  <tr>
+                    <td><strong>${escapeHtml(l.productName)}</strong><br><small style="color:var(--muted)">${escapeHtml(l.notes || "")}</small></td>
+                    <td><span class="badge">${escapeHtml(l.lotNumber)}</span></td>
+                    <td>${fmtBdt(l.purchasePrice)}</td>
+                    <td>${fmtBdt(l.sellingPrice)}</td>
+                    <td><strong>${l.currentStock}</strong> / ${l.initialStock}</td>
+                  </tr>
+                `).join("")}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      `;
+    }
+
+    function addLot() {
+      const productId = document.getElementById("lProduct").value;
+      const lotNumber = document.getElementById("lNum").value.trim();
+      const purchasePrice = Number(document.getElementById("lBuy").value || 0);
+      const sellingPrice = Number(document.getElementById("lSell").value || 0);
+      const stock = Number(document.getElementById("lStock").value || 0);
+      const notes = document.getElementById("lNote").value.trim();
+
+      const prod = db.products.find(p => p.id === productId);
+      if (!prod) return showMessage("সঠিক পণ্য নির্বাচন করুন।", true);
+      if (!lotNumber) return showMessage("Lot নম্বর লিখতে হবে।", true);
+      if (purchasePrice <= 0 || sellingPrice <= 0) return showMessage("ক্রয়মূল্য ও বিক্রয়মূল্য ০-এর বেশি হতে হবে।", true);
+      if (stock <= 0) return showMessage("স্টক পরিমাণ ০-এর বেশি হতে হবে।", true);
+
+      const dup = db.lots.some(l => l.productId === productId && l.lotNumber.toLowerCase() === lotNumber.toLowerCase());
+      if (dup) return showMessage("এই পণ্যে একই Lot নম্বর ইতিমধ্যে আছে।", true);
+
+      db.lots.push({
+        id: "lot_" + Date.now() + "_" + Math.random().toString(36).slice(2, 6),
+        productId: prod.id,
+        productName: prod.name,
+        category: prod.category,
+        lotNumber,
+        purchasePrice,
+        sellingPrice,
+        initialStock: stock,
+        currentStock: stock,
+        notes,
+        date: Date.now()
+      });
+      saveDb();
+      showMessage(`${prod.name} — '${lotNumber}' যোগ করা হয়েছে।`);
+      render();
+    }
+
+    function renderParties() {
+      const q = (document.getElementById("partySearch")?.value || "").toLowerCase();
+      const filtered = db.parties.filter(pt => {
+        if (!q) return true;
+        return pt.name.toLowerCase().includes(q) ||
+          pt.phone.toLowerCase().includes(q) ||
+          pt.interestedProducts.toLowerCase().includes(q);
+      });
+
+      return `
+        <div class="card">
+          <div class="section-head"><h2>PARTY CONTACT LIST — নতুন পার্টি যোগ করুন</h2></div>
+          <p style="color:var(--muted);font-size:13px;margin-top:0">দ্রষ্টব্য: পার্টি যোগ করলে কোনো বিক্রয়, স্টক কমানো বা বকেয়া তৈরি হয় না।</p>
+          <div class="form-grid">
+            <div><label>পার্টির নাম *</label><input id="ptName" placeholder="যেমন: করিম সাহেব" /></div>
+            <div><label>মোবাইল নম্বর *</label><input id="ptPhone" placeholder="যেমন: 017XXXXXXXX" /></div>
+            <div><label>আগ্রহী পণ্য *</label><input id="ptInterest" placeholder="যেমন: Shahi Oud, Kasturi" /></div>
+            <div>
+              <label>কন্টাক্ট স্ট্যাটাস</label>
+              <select id="ptStatus">
+                <option value="Interested">Interested</option>
+                <option value="Contacted">Contacted</option>
+                <option value="Product Arrived">Product Arrived</option>
+                <option value="Converted to Customer">Converted to Customer</option>
+              </select>
+            </div>
+            <div><label>ঠিকানা</label><input id="ptAddr" placeholder="ঐচ্ছিক ঠিকানা" /></div>
+            <div><label>নোট</label><input id="ptNote" placeholder="ঐচ্ছিক নোট" /></div>
+          </div>
+          <button class="btn btn-gold" onclick="addParty()">পার্টি সেভ করুন</button>
+        </div>
+
+        <div class="card">
+          <div class="section-head">
+            <h2>পার্টি কন্টাক্ট তালিকা (${filtered.length})</h2>
+            <input id="partySearch" placeholder="নাম, ফোন বা আগ্রহী পণ্য খুঁজুন..." value="${escapeHtml(q)}" oninput="render()" style="width:230px" />
+          </div>
+          <div class="table-wrap">
+            <table>
+              <thead><tr><th>নাম ও ফোন</th><th>আগ্রহী পণ্য</th><th>স্ট্যাটাস</th><th>যোগাযোগ ও খাতা</th></tr></thead>
+              <tbody>
+                ${filtered.map(pt => {
+                  const cleanDigits = pt.phone.replace(/\D/g, "");
+                  const waNum = cleanDigits.startsWith("01") && cleanDigits.length === 11 ? "88" + cleanDigits : cleanDigits;
+                  return `
+                    <tr>
+                      <td><strong>${escapeHtml(pt.name)}</strong><br>${escapeHtml(pt.phone)}</td>
+                      <td>${escapeHtml(pt.interestedProducts)}</td>
+                      <td><span class="badge">${escapeHtml(pt.status)}</span></td>
+                      <td>
+                        <div class="row-actions">
+                          <a class="btn btn-navy" style="text-decoration:none" href="tel:${escapeHtml(pt.phone)}">কল</a>
+                          <a class="btn btn-green" style="text-decoration:none" target="_blank" href="https://wa.me/${waNum}">WhatsApp</a>
+                          <button class="btn btn-ghost" onclick="openPartyLedger('${pt.id}')">খাতা</button>
+                        </div>
+                      </td>
+                    </tr>
+                  `;
+                }).join("")}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      `;
+    }
+
+    function addParty() {
+      const name = document.getElementById("ptName").value.trim();
+      const phone = document.getElementById("ptPhone").value.trim();
+      const interestedProducts = document.getElementById("ptInterest").value.trim();
+      const status = document.getElementById("ptStatus").value;
+      const address = document.getElementById("ptAddr").value.trim();
+      const notes = document.getElementById("ptNote").value.trim();
+
+      if (!name) return showMessage("পার্টির নাম খালি রাখা যাবে না।", true);
+      const digits = phone.replace(/\D/g, "");
+      if (digits.length < 10) return showMessage("সঠিক মোবাইল নম্বর দিন।", true);
+      if (!interestedProducts) return showMessage("আগ্রহী পণ্যের নাম লিখুন।", true);
+
+      db.parties.push({
+        id: "prt_" + Date.now(),
+        name, phone, interestedProducts, status, address, notes,
+        createdAt: Date.now()
+      });
+      saveDb();
+      showMessage(`পার্টি '${name}' কন্টাক্ট লিস্টে যোগ করা হয়েছে।`);
+      render();
+    }
+
+    function openPartyLedger(partyId) {
+      selectedLedgerPartyId = partyId;
+      switchTab("payments");
+    }
+
+    function renderSales() {
+      const selectedLotId = document.getElementById("sLot")?.value || (db.lots[0]?.id || "");
+      const selectedLot = db.lots.find(l => l.id === selectedLotId);
+
+      return `
+        <div class="card">
+          <div class="section-head"><h2>নতুন বিক্রয় করুন</h2></div>
+          ${(db.parties.length === 0 || db.lots.length === 0)
+            ? "<p style='color:var(--red)'>বিক্রয় করার জন্য আগে পার্টি ও স্টক থাকা Lot যোগ করুন।</p>"
+            : `
+            <div class="form-grid">
+              <div>
+                <label>পার্টি নির্বাচন *</label>
+                <select id="sParty">
+                  ${db.parties.map(pt => `<option value="${pt.id}">${escapeHtml(pt.name)} (${escapeHtml(pt.phone)})</option>`).join("")}
+                </select>
+              </div>
+              <div>
+                <label>Lot নির্বাচন *</label>
+                <select id="sLot" onchange="render()">
+                  ${db.lots.map(l => `<option value="${l.id}" ${l.id === selectedLotId ? "selected" : ""}>${escapeHtml(l.productName)} — ${escapeHtml(l.lotNumber)} (স্টক: ${l.currentStock})</option>`).join("")}
+                </select>
+              </div>
+              <div><label>বিক্রয়ের পরিমাণ *</label><input id="sQty" type="number" min="1" value="1" /></div>
+              <div><label>ইউনিট বিক্রয়মূল্য (৳) *</label><input id="sPrice" type="number" min="1" value="${selectedLot ? selectedLot.sellingPrice : 0}" /></div>
+              <div><label>প্রাথমিক জমা (৳)</label><input id="sPaid" type="number" min="0" value="0" /></div>
+              <div>
+                <label>পেমেন্ট মাধ্যম</label>
+                <select id="sMethod">
+                  <option>Cash</option>
+                  <option>bKash</option>
+                  <option>Nagad</option>
+                  <option>Bank Transfer</option>
+                  <option>Other</option>
+                </select>
+              </div>
+            </div>
+            <button class="btn btn-gold" onclick="recordSale()">বিক্রয় নিশ্চিত করুন</button>
+          `}
+        </div>
+
+        <div class="card">
+          <h2>বিক্রয়ের তালিকা (${db.sales.length})</h2>
+          <div class="table-wrap">
+            <table>
+              <thead><tr><th>তারিখ</th><th>পার্টি</th><th>পণ্য ও Lot</th><th>পরিমাণ</th><th>মোট</th><th>জমা</th><th>বকেয়া</th><th>লাভ</th></tr></thead>
+              <tbody>
+                ${[...db.sales].reverse().map(s => {
+                  const due = Math.max(0, Number(s.totalAmount) - Number(s.initialPaidAmount));
+                  return `
+                    <tr>
+                      <td>${fmtDate(s.date)}</td>
+                      <td>${escapeHtml(s.partyName)}</td>
+                      <td>${escapeHtml(s.productName)} (${escapeHtml(s.lotNumber)})</td>
+                      <td>${s.qty}</td>
+                      <td><strong>${fmtBdt(s.totalAmount)}</strong></td>
+                      <td>${fmtBdt(s.initialPaidAmount)}</td>
+                      <td style="color:${due > 0 ? "var(--red)" : "inherit"}"><strong>${fmtBdt(due)}</strong></td>
+                      <td style="color:var(--green)"><strong>${fmtBdt(s.profit)}</strong></td>
+                    </tr>
+                  `;
+                }).join("")}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      `;
+    }
+
+    function recordSale() {
+      const partyId = document.getElementById("sParty").value;
+      const lotId = document.getElementById("sLot").value;
+      const qty = Number(document.getElementById("sQty").value || 0);
+      const unitPrice = Number(document.getElementById("sPrice").value || 0);
+      const paid = Number(document.getElementById("sPaid").value || 0);
+      const method = document.getElementById("sMethod").value;
+
+      const party = db.parties.find(p => p.id === partyId);
+      const lot = db.lots.find(l => l.id === lotId);
+
+      if (!party || !lot) return showMessage("পার্টি ও Lot নির্বাচন করুন।", true);
+      if (qty <= 0) return showMessage("বিক্রয়ের পরিমাণ ০-এর বেশি হতে হবে।", true);
+      if (unitPrice <= 0) return showMessage("বিক্রয়মূল্য ০-এর বেশি হতে হবে।", true);
+      if (qty > Number(lot.currentStock)) return showMessage(`এই Lot-এ মাত্র ${lot.currentStock} স্টক আছে। এর বেশি বিক্রয় করা যাবে না।`, true);
+
+      const totalAmount = qty * unitPrice;
+      if (paid < 0 || paid > totalAmount) return showMessage("প্রাথমিক জমা ০ থেকে মোট বিক্রয়মূল্যের মধ্যে হতে হবে।", true);
+
+      const purchaseCost = qty * Number(lot.purchasePrice);
+      const profit = qty * (unitPrice - Number(lot.purchasePrice));
+      const saleId = "sal_" + Date.now();
+
+      lot.currentStock = Number(lot.currentStock) - qty;
+      party.status = "Converted to Customer";
+
+      db.sales.push({
+        id: saleId,
+        partyId: party.id,
+        partyName: party.name,
+        productId: lot.productId,
+        productName: lot.productName,
+        lotId: lot.id,
+        lotNumber: lot.lotNumber,
+        qty,
+        unitPrice,
+        totalAmount,
+        initialPaidAmount: paid,
+        purchaseCost,
+        profit,
+        method,
+        date: Date.now()
+      });
+
+      if (paid > 0) {
+        db.payments.push({
+          id: "pay_" + Date.now(),
+          partyId: party.id,
+          partyName: party.name,
+          saleId,
+          amount: paid,
+          method,
+          ref: "Initial Sale",
+          date: Date.now()
+        });
+      }
+
+      saveDb();
+      showMessage(`'${party.name}' এর কাছে '${lot.productName}' (${lot.lotNumber}) বিক্রয় সম্পন্ন হয়েছে।`);
+      render();
+    }
+
+    function renderPaymentsAndLedger() {
+      const targetPartyId = selectedLedgerPartyId || (db.parties[0]?.id || "");
+      const ledger = targetPartyId ? getPartyTotals(targetPartyId) : null;
+      const activeParty = db.parties.find(p => p.id === targetPartyId);
+
+      return `
+        <div class="card">
+          <div class="section-head"><h2>পেমেন্ট কালেকশন (বকেয়া আদায়)</h2></div>
+          ${db.parties.length === 0
+            ? "<p style='color:var(--muted)'>কোনো পার্টি নেই।</p>"
+            : `
+            <div class="form-grid">
+              <div>
+                <label>পার্টি নির্বাচন *</label>
+                <select id="payParty" onchange="selectedLedgerPartyId=this.value;render()">
+                  ${db.parties.map(pt => {
+                    const t = getPartyTotals(pt.id);
+                    return `<option value="${pt.id}" ${pt.id === targetPartyId ? "selected" : ""}>${escapeHtml(pt.name)} (বকেয়া: ${fmtBdt(t.totalDue)})</option>`;
+                  }).join("")}
+                </select>
+              </div>
+              <div><label>পেমেন্টের পরিমাণ (৳) *</label><input id="payAmt" type="number" min="1" /></div>
+              <div>
+                <label>মাধ্যম</label>
+                <select id="payMethod">
+                  <option>Cash</option>
+                  <option>bKash</option>
+                  <option>Nagad</option>
+                  <option>Bank</option>
+                  <option>Other</option>
+                </select>
+              </div>
+              <div><label>Transaction ID / Ref</label><input id="payRef" placeholder="ঐচ্ছিক" /></div>
+            </div>
+            <button class="btn btn-gold" onclick="collectPayment()">পেমেন্ট জমা নিন</button>
+          `}
+        </div>
+
+        ${activeParty && ledger ? `
+          <div class="card highlight-card">
+            <h2 style="margin:0 0 6px 0;color:var(--gold)">পার্টি খাতা: ${escapeHtml(activeParty.name)} (${escapeHtml(activeParty.phone)})</h2>
+            <div class="grid" style="margin-top:10px;margin-bottom:0">
+              <div><div class="stat-title">মোট বিক্রয়</div><div class="stat-val">${fmtBdt(ledger.totalSales)}</div></div>
+              <div><div class="stat-title">মোট পরিশোধ</div><div class="stat-val">${fmtBdt(ledger.totalPaid)}</div></div>
+              <div><div class="stat-title">মোট বকেয়া</div><div class="stat-val">${fmtBdt(ledger.totalDue)}</div></div>
+            </div>
+          </div>
+
+          <div class="card">
+            <h3>${escapeHtml(activeParty.name)} — লেনদেনের হিস্ট্রি</h3>
+            <div class="table-wrap">
+              <table>
+                <thead><tr><th>তারিখ</th><th>বিবরণ</th><th>মাধ্যম</th><th>পরিমাণ</th></tr></thead>
+                <tbody>
+                  ${ledger.sales.map(s => `
+                    <tr>
+                      <td>${fmtDate(s.date)}</td>
+                      <td>বিক্রয়: ${escapeHtml(s.productName)} (${escapeHtml(s.lotNumber)}) × ${s.qty} @ ${fmtBdt(s.unitPrice)}</td>
+                      <td>${escapeHtml(s.method)}</td>
+                      <td><strong>${fmtBdt(s.totalAmount)}</strong></td>
+                    </tr>
+                  `).join("")}
+                  ${ledger.payments.map(p => `
+                    <tr>
+                      <td>${fmtDate(p.date)}</td>
+                      <td>পেমেন্ট জমা (${escapeHtml(p.ref || "")})</td>
+                      <td>${escapeHtml(p.method)}</td>
+                      <td style="color:var(--green)"><strong>+ ${fmtBdt(p.amount)}</strong></td>
+                    </tr>
+                  `).join("")}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        ` : ""}
+      `;
+    }
+
+    function collectPayment() {
+      const partyId = document.getElementById("payParty").value;
+      const amount = Number(document.getElementById("payAmt").value || 0);
+      const method = document.getElementById("payMethod").value;
+      const ref = document.getElementById("payRef").value.trim();
+
+      const party = db.parties.find(p => p.id === partyId);
+      if (!party) return showMessage("পার্টি নির্বাচন করুন।", true);
+      if (amount <= 0) return showMessage("পেমেন্টের পরিমাণ ০-এর বেশি হতে হবে।", true);
+
+      const totals = getPartyTotals(party.id);
+      if (totals.totalDue <= 0) return showMessage("এই পার্টির কোনো বকেয়া নেই।", true);
+      if (amount > totals.totalDue) return showMessage(`পেমেন্ট বকেয়া (${fmtBdt(totals.totalDue)})-এর বেশি হতে পারবে না।`, true);
+
+      db.payments.push({
+        id: "pay_" + Date.now(),
+        partyId: party.id,
+        partyName: party.name,
+        amount,
+        method,
+        ref,
+        date: Date.now()
+      });
+      saveDb();
+      showMessage(`'${party.name}' এর কাছ থেকে ${fmtBdt(amount)} পেমেন্ট গ্রহণ করা হয়েছে।`);
+      render();
+    }
+
+    function renderReports() {
+      const totalSales = db.sales.reduce((s, x) => s + Number(x.totalAmount || 0), 0);
+      const totalProfit = db.sales.reduce((s, x) => s + Number(x.profit || 0), 0);
+      const totalDue = db.parties.reduce((s, pt) => s + getPartyTotals(pt.id).totalDue, 0);
+
+      const byProduct = {};
+      db.sales.forEach(s => {
+        if (!byProduct[s.productName]) byProduct[s.productName] = { qty: 0, amount: 0, profit: 0 };
+        byProduct[s.productName].qty += Number(s.qty || 0);
+        byProduct[s.productName].amount += Number(s.totalAmount || 0);
+        byProduct[s.productName].profit += Number(s.profit || 0);
+      });
+
+      return `
+        <div class="grid">
+          <div class="card"><div class="stat-title">মোট বিক্রয়</div><div class="stat-val">${fmtBdt(totalSales)}</div></div>
+          <div class="card"><div class="stat-title">মোট লাভ</div><div class="stat-val" style="color:var(--green)">${fmtBdt(totalProfit)}</div></div>
+          <div class="card"><div class="stat-title">মোট বকেয়া</div><div class="stat-val" style="color:var(--red)">${fmtBdt(totalDue)}</div></div>
+        </div>
+
+        <div class="card">
+          <div class="section-head">
+            <h2>পণ্য অনুযায়ী বিক্রয় রিপোর্ট</h2>
+            <button class="btn btn-gold" onclick="exportSalesCsv()">CSV ডাউনলোড</button>
+          </div>
+          <div class="table-wrap">
+            <table>
+              <thead><tr><th>পণ্য</th><th>বিক্রিত পরিমাণ</th><th>মোট বিক্রয়</th><th>লাভ</th></tr></thead>
+              <tbody>
+                ${Object.entries(byProduct).map(([name, info]) => `
+                  <tr>
+                    <td><strong>${escapeHtml(name)}</strong></td>
+                    <td>${info.qty}</td>
+                    <td>${fmtBdt(info.amount)}</td>
+                    <td style="color:var(--green)"><strong>${fmtBdt(info.profit)}</strong></td>
+                  </tr>
+                `).join("")}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      `;
+    }
+
+    function exportSalesCsv() {
+      let csv = "\uFEFFDate,Party,Product,Lot,Qty,UnitPrice,Total,Paid,Profit,Method\n";
+      db.sales.forEach(s => {
+        csv += `"${fmtDate(s.date)}","${s.partyName}","${s.productName}","${s.lotNumber}",${s.qty},${s.unitPrice},${s.totalAmount},${s.initialPaidAmount},${s.profit},"${s.method}"\n`;
+      });
+      const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = "misbah_sales_report.csv";
+      a.click();
+      URL.revokeObjectURL(url);
+    }
+
+    function renderBackup() {
+      return `
+        <div class="card">
+          <h2>JSON ব্যাকআপ ও রিস্টোর</h2>
+          <p style="color:var(--muted)">ফোন বা ব্রাউজার পরিবর্তন করলে এখান থেকে JSON ব্যাকআপ সেভ করে অন্য ডিভাইসে রিস্টোর করতে পারবেন।</p>
+          <div class="row-actions" style="margin-bottom:14px">
+            <button class="btn btn-gold" onclick="downloadBackupJson()">JSON ব্যাকআপ ডাউনলোড করুন</button>
+            <label class="btn btn-navy" style="cursor:pointer;margin:0">
+              ব্যাকআপ ফাইল রিস্টোর করুন
+              <input type="file" accept=".json,application/json" style="display:none" onchange="restoreBackupJson(event)" />
+            </label>
+          </div>
+        </div>
+      `;
+    }
+
+    function downloadBackupJson() {
+      const payload = {
+        appName: "MISBAH PRODUCT MANAGER",
+        exportedAt: new Date().toISOString(),
+        data: db
+      };
+      const blob = new Blob([JSON.stringify(payload, null, 2)], { type: "application/json" });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = `misbah_backup_${Date.now()}.json`;
+      a.click();
+      URL.revokeObjectURL(url);
+      showMessage("JSON ব্যাকআপ ফাইল ডাউনলোড হয়েছে।");
+    }
+
+    function restoreBackupJson(event) {
+      const file = event.target.files?.[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = () => {
+        try {
+          const parsed = JSON.parse(String(reader.result || ""));
+          if (parsed.appName !== "MISBAH PRODUCT MANAGER" || !parsed.data) {
+            return showMessage("এটি MISBAH PRODUCT MANAGER-এর বৈধ ব্যাকআপ ফাইল নয়।", true);
+          }
+          if (!confirm("বর্তমান ডাটা প্রতিস্থাপন করে ব্যাকআপ থেকে রিস্টোর করতে চান?")) return;
+          db = {
+            products: parsed.data.products || [],
+            lots: parsed.data.lots || [],
+            parties: parsed.data.parties || [],
+            sales: parsed.data.sales || [],
+            payments: parsed.data.payments || []
+          };
+          saveDb();
+          showMessage("সব ডাটা সফলভাবে রিস্টোর হয়েছে।");
+          render();
+        } catch {
+          showMessage("ফাইলটি পড়া যায়নি বা ক্ষতিগ্রস্ত।", true);
+        }
+      };
+      reader.readAsText(file);
+    }
+
+    render();
+  </script>
+</body>
+</html>
